@@ -4,6 +4,9 @@ package com.example.diploma_thesis.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Table(name="products")
@@ -26,6 +29,12 @@ public class Product {
 
     @Column(name="city")
     private String city;
+
+    @Column(name="previewImageId")
+    private Long previewImageId;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Image> images = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name="supplier_id", nullable = false)
