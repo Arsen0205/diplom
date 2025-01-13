@@ -52,6 +52,9 @@ public class Supplier {
     @Column(name="password")
     private String password;
 
+    @Column(name="active")
+    private boolean active;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="user_role", joinColumns = @JoinColumn(name = "user_login", referencedColumnName = "login"))
     @Enumerated(EnumType.STRING)
@@ -65,4 +68,5 @@ public class Supplier {
 
     @PrePersist
     private void init(){dateOfCreated=LocalDateTime.now();}
+
 }

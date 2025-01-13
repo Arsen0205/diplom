@@ -21,7 +21,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                        .requestMatchers("/register","/supplier/**").permitAll()
+                        .requestMatchers("/register","/supplier/**", "/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout->logout.permitAll());

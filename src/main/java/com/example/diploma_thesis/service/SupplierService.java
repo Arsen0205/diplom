@@ -1,10 +1,13 @@
 package com.example.diploma_thesis.service;
 
 
+import com.example.diploma_thesis.dto.request.LoginDtoRequest;
 import com.example.diploma_thesis.dto.request.RegisterSupplierDtoRequest;
 import com.example.diploma_thesis.dto.response.Response;
 import com.example.diploma_thesis.models.Supplier;
+import com.example.diploma_thesis.repository.SoleTraderRepository;
 import com.example.diploma_thesis.repository.SupplierRepository;
+import com.example.diploma_thesis.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +16,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class SupplierService {
     private final SupplierRepository supplierRepository;
+    private final SoleTraderRepository soleTraderRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
 
     public Response registerSupplier(RegisterSupplierDtoRequest request){
-        if(supplierRepository.findByLogin(request.getLogin()).isPresent()){
-            throw new RuntimeException("Данный пользователь уже зарегистрирован");
+        if(supplierRepository.findByLogin(request.getLogin()).isPresent() && userRepository.findByLogin(request.getLogin()).isPresent() && supplierRepository.findByLogin(request.getLogin()).isPresent()){
+            throw new RuntimeException("Данный пользователь с таким логином уже зарегистрирован");
         }
 
         Supplier supplier = new Supplier();
@@ -35,9 +40,23 @@ public class SupplierService {
         supplier.setPhoneNumber(request.getPhoneNumber());
         supplier.setRegistrationNumber(request.getRegistrationNumber());
         supplier.setRoles(request.getRole());
+        supplier.setActive(true);
 
         supplierRepository.save(supplier);
 
         return new Response("Пользователь успешно зарегистрирован");
+    }
+
+    public Response loginSupplier(LoginDtoRequest request){
+        Supplier supplier = supplierRepository.findByLogin(request.getLogin()).orElseThrow(()-> new IllegalArgumentException("Пользователя с таким логином не существует"));
+
+        if(!passwordEncoder.matches(request.getPassword(), supplier.getPassword())){
+            throw new IllegalArgumentException("Неверный пароль!");
+        }
+        if(!supplier.isActive()){
+            throw new IllegalArgumentException("Ваш аккаунт заблокирован");
+        }
+
+        return new Response("Вход выполнен успешно");
     }
 }

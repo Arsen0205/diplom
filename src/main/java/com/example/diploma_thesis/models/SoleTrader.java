@@ -32,6 +32,9 @@ public class SoleTrader {
     @Column(name="OGRNIP", unique = true)
     private String ogrnip;
 
+    @Column(name="active")
+    private boolean active;
+
     @Column(name="registry_entry_number", unique = true)
     private String registryEntryNumber;
 
