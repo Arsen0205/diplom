@@ -48,7 +48,7 @@ public class SoleTraderService {
         return new Response("Вы успешно зарегистрировались!");
     }
 
-    public Response loginSupplier(LoginDtoRequest request){
+    public Response loginSoleTrader(LoginDtoRequest request){
         SoleTrader soleTrader = soleTraderRepository.findByLogin(request.getLogin()).orElseThrow(()-> new IllegalArgumentException("Пользователя с таким логином не найден!"));
         if(!passwordEncoder.matches(request.getPassword(), soleTrader.getPassword())){
             throw new IllegalArgumentException("Неверный пароль!");

@@ -24,7 +24,7 @@ public class SoleTraderController {
 
     @PostMapping("/soleTrader/login")
     public Response loginSoleTrader(@Valid @RequestBody LoginDtoRequest request){
-        soleTraderService.loginSupplier(request);
+        soleTraderService.loginSoleTrader(request);
         return new Response("Вход выполнен успешно");
     }
 }
