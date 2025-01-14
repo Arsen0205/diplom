@@ -63,9 +63,6 @@ public class Supplier {
     @Column(name="date_of_created")
     private LocalDateTime dateOfCreated;
 
-    @OneToMany(mappedBy = "supplier")
-    private List<Product> products;
-
     @PrePersist
     private void init(){dateOfCreated=LocalDateTime.now();}
 

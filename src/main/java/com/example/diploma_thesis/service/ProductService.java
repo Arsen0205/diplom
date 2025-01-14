@@ -34,6 +34,7 @@ public class ProductService {
         product.setPrice(request.getPrice());
         product.setQuantity(request.getQuantity());
         product.setTitle(request.getTitle());
+        product.setSupplier(supplier);
 
         List<Image> images = new ArrayList<>();
         for(int i=0; i < request.getImages().size(); i++){

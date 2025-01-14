@@ -6,6 +6,7 @@ import com.example.diploma_thesis.dto.response.Response;
 import com.example.diploma_thesis.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/product/add")
-    public Response addProduct(@Valid @RequestBody AddProductDtoRequest request) throws IOException {
+    public Response addProduct(@Valid @ModelAttribute AddProductDtoRequest request) throws IOException {
         productService.addProduct(request);
 
         return new Response("Товар успешно добавлен");

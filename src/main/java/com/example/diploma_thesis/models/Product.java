@@ -40,7 +40,7 @@ public class Product {
     @JoinColumn(name="supplier_id", nullable = false)
     private Supplier supplier;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="category")
+    @ManyToOne
+    @JoinColumn(name="category_id", nullable = false)
     private Category category;
 }
