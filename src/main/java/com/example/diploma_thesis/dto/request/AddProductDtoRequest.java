@@ -22,4 +22,6 @@ public class AddProductDtoRequest {
     @NotNull(message = "Данное поле должно быть заполнено")
     private List<MultipartFile> images;
     private String login;
+    @NotNull(message = "Данное поле должно быть заполнено")
+    private Long categoryId;
 }

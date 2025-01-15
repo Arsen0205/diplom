@@ -3,9 +3,11 @@ package com.example.diploma_thesis.service;
 
 import com.example.diploma_thesis.dto.request.AddProductDtoRequest;
 import com.example.diploma_thesis.dto.response.Response;
+import com.example.diploma_thesis.models.Category;
 import com.example.diploma_thesis.models.Image;
 import com.example.diploma_thesis.models.Product;
 import com.example.diploma_thesis.models.Supplier;
+import com.example.diploma_thesis.repository.CategoryRepository;
 import com.example.diploma_thesis.repository.ImageRepository;
 import com.example.diploma_thesis.repository.ProductRepository;
 import com.example.diploma_thesis.repository.SupplierRepository;
@@ -23,9 +25,12 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ImageRepository imageRepository;
     private final SupplierRepository supplierRepository;
+    private final CategoryRepository categoryRepository;
 
     public Response addProduct(AddProductDtoRequest request) throws IOException {
         Supplier supplier = supplierRepository.findByLogin(request.getLogin()).orElseThrow(()-> new IllegalArgumentException("Пользователя с таким логином не существует"));
+
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(()-> new IllegalArgumentException("Такой категории не существует"));
 
         Product product = new Product();
 
@@ -35,6 +40,7 @@ public class ProductService {
         product.setQuantity(request.getQuantity());
         product.setTitle(request.getTitle());
         product.setSupplier(supplier);
+        product.setCategory(category);
 
         List<Image> images = new ArrayList<>();
         for(int i=0; i < request.getImages().size(); i++){
