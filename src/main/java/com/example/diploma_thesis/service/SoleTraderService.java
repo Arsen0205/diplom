@@ -3,7 +3,6 @@ package com.example.diploma_thesis.service;
 
 import com.example.diploma_thesis.dto.request.LoginDtoRequest;
 import com.example.diploma_thesis.dto.request.RegisterSoleTraderDtoRequest;
-import com.example.diploma_thesis.dto.request.RegisterSupplierDtoRequest;
 import com.example.diploma_thesis.dto.response.Response;
 import com.example.diploma_thesis.models.SoleTrader;
 import com.example.diploma_thesis.repository.SoleTraderRepository;
