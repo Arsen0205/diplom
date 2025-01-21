@@ -3,6 +3,7 @@ package com.example.diploma_thesis.models;
 
 import com.example.diploma_thesis.models.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;

@@ -136,7 +136,7 @@ public class UserService {
     }
 
     public Response addCategory(AddCategoryDtoRequest request){
-        if (categoryRepository.findByLogin(request.getCategory()).isPresent()){
+        if (categoryRepository.findByName(request.getCategory()).isPresent()){
             throw new IllegalArgumentException("Такая категория уже существует");
         }
         Category category = new Category();

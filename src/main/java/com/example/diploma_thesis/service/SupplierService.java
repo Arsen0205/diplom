@@ -4,7 +4,10 @@ package com.example.diploma_thesis.service;
 import com.example.diploma_thesis.dto.request.LoginDtoRequest;
 import com.example.diploma_thesis.dto.request.RegisterSupplierDtoRequest;
 import com.example.diploma_thesis.dto.response.Response;
+import com.example.diploma_thesis.models.Order;
 import com.example.diploma_thesis.models.Supplier;
+import com.example.diploma_thesis.models.enums.OrderStatus;
+import com.example.diploma_thesis.repository.OrderRepository;
 import com.example.diploma_thesis.repository.SoleTraderRepository;
 import com.example.diploma_thesis.repository.SupplierRepository;
 import com.example.diploma_thesis.repository.UserRepository;
@@ -19,7 +22,7 @@ public class SupplierService {
     private final SoleTraderRepository soleTraderRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final OrderRepository orderRepository;
 
     public Response registerSupplier(RegisterSupplierDtoRequest request){
         if(supplierRepository.findByLogin(request.getLogin()).isPresent() && userRepository.findByLogin(request.getLogin()).isPresent() && supplierRepository.findByLogin(request.getLogin()).isPresent()){
@@ -58,5 +61,12 @@ public class SupplierService {
         }
 
         return new Response("Вход выполнен успешно");
+    }
+
+    public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        order.setStatus(newStatus);
+        orderRepository.save(order);
     }
 }
