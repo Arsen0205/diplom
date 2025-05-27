@@ -2,6 +2,7 @@ package com.example.diplom.service;
 
 import com.example.diplom.dto.response.*;
 import com.example.diplom.models.*;
+import com.example.diplom.models.enums.OrderStatus;
 import com.example.diplom.repository.OrderItemRepository;
 import com.example.diplom.repository.OrderRepository;
 import com.example.diplom.repository.ProductRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -187,6 +189,37 @@ public class SupplierService {
                     );
                 })
                 .toList();
+    }
+
+    @Transactional
+    public AnalyticsSupplierDtoResponse getPaidOrdersAnalytics(Principal principal){
+        Supplier supplier = supplierRepository.findById(getUserByPrincipal(principal).getId())
+                .orElseThrow(()-> new UsernameNotFoundException("Поставщика не существует"));
+
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+
+        List<Order> orders = orderRepository.findBySupplierAndStatus(supplier, OrderStatus.PAID);
+        List<Order> ordersThirty = orderRepository.findBySupplierAndStatusAndDateTimeAfter(supplier, OrderStatus.PAID, thirtyDaysAgo);
+
+
+        int totalPaidOrders = orders.size();
+
+        BigDecimal totalProfit = orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .map(item->item.getCostPrice()
+                        .subtract(item.getSellingPrice())
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalRevenue = ordersThirty.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .map(item->item.getCostPrice()
+                        .subtract(item.getSellingPrice())
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new AnalyticsSupplierDtoResponse(totalPaidOrders, totalProfit, totalRevenue);
+
     }
 
 

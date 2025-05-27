@@ -59,4 +59,10 @@ public class SupplierController {
         List<OrderItemSupplierDtoResponse> responses = supplierService.orderInfo(id, principal);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/analytics")
+    public ResponseEntity<AnalyticsSupplierDtoResponse> getPaidOrdersAnalytics(Principal principal){
+        AnalyticsSupplierDtoResponse analyticsSupplierDtoResponse = supplierService.getPaidOrdersAnalytics(principal);
+        return ResponseEntity.ok(analyticsSupplierDtoResponse);
+    }
 }
