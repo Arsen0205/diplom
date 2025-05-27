@@ -60,6 +60,10 @@ public class SupplierController {
         return ResponseEntity.ok(responses);
     }
 
+    @Operation(
+            summary = "Просмотр аналитики поставщика",
+            description = "Возвращает кол-во выполненных заказов, общую выручку и выручку за последний месяц"
+    )
     @GetMapping("/analytics")
     public ResponseEntity<AnalyticsSupplierDtoResponse> getPaidOrdersAnalytics(Principal principal){
         AnalyticsSupplierDtoResponse analyticsSupplierDtoResponse = supplierService.getPaidOrdersAnalytics(principal);
