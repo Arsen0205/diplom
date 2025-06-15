@@ -33,7 +33,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class ProductService {
-    private static final String UPLOAD_DIR = "uploads/";
+    private static final String UPLOAD_DIR = "C:/diplom-uploads/";
 
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;

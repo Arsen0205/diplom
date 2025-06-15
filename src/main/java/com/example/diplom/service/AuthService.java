@@ -32,12 +32,6 @@ public class AuthService {
     private final ClientRepository clientRepository;
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authManager;
-    private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService; // или UserService
-    private final SupplierRepository supplierRepo;
-    private final ClientRepository clientRepo;
-    private final AdminRepository adminRepo;
 
     public UserInfoDtoResponse registerSupplier(RegisterSupplierDtoRequest request) {
         if (supplierRepository.findByLogin(request.getLogin()).isPresent()
@@ -133,29 +127,4 @@ public class AuthService {
                 );
 
     }
-
-//    public LoginResponse login(String login, String password) {
-//        var auth = authManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(login, password)
-//        );
-//        UserDetails ud = (UserDetails) auth.getPrincipal();
-//        String token = jwtUtil.generateToken(ud);
-//
-//        // Предположим, что userLogin уникален во всех трёх репах
-//        User userEntity =
-//                supplierRepo.findByLogin(login)
-//                        .or(() -> clientRepo.findByLogin(login))
-//                        .or(() -> adminRepo.findByLogin(login))
-//                        .orElseThrow();
-//
-//        // Маппим в DTO
-//        UserInfoDtoResponse userInfo = new UserInfoDtoResponse(
-//                userEntity.getId(),
-//                userEntity.getLogin(),
-//                userEntity.getEmail(),
-//                userEntity.getRole()
-//        );
-//
-//        return new LoginResponse(token, userInfo);
-//    }
 }
