@@ -2,6 +2,7 @@ package com.example.diplom.controller;
 
 import com.example.diplom.dto.request.CreateProductDtoRequest;
 import com.example.diplom.dto.response.MainDtoResponse;
+import com.example.diplom.dto.response.ProductDtoResponse;
 import com.example.diplom.dto.response.ProductInfoMainDtoResponse;
 import com.example.diplom.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +40,7 @@ public class ProductController {
             description = "Создаёт новый продукт с указанными параметрами и загружает изображения"
     )
     @PostMapping("/create")
-    public ResponseEntity<String> createProduct(
+    public ResponseEntity<ProductDtoResponse> createProduct(
             @RequestParam("title") String title,
             @RequestParam("quantity") int quantity,
             @RequestParam("price") BigDecimal price,
@@ -54,9 +55,9 @@ public class ProductController {
         request.setSellingPrice(sellingPrice);
         request.setImages(images);
 
-        productService.createProduct(request, principal);
+        ProductDtoResponse response = productService.createProduct(request, principal);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Объявление создано!");
+                .body(response);
     }
 
     @Operation(

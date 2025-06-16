@@ -3,6 +3,7 @@ package com.example.diplom.service;
 
 import com.example.diplom.dto.request.CreateProductDtoRequest;
 import com.example.diplom.dto.response.MainDtoResponse;
+import com.example.diplom.dto.response.ProductDtoResponse;
 import com.example.diplom.dto.response.ProductInfoMainDtoResponse;
 import com.example.diplom.dto.response.SuppliersDtoResponse;
 import com.example.diplom.models.Client;
@@ -14,6 +15,8 @@ import com.example.diplom.repository.ImageRepository;
 import com.example.diplom.repository.ProductRepository;
 import com.example.diplom.repository.SupplierRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,16 +34,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductService {
-    private static final String UPLOAD_DIR = "C:/diplom-uploads/";
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
     private final ImageRepository imageRepository;
     private final ClientRepository clientRepository;
 
-    public void createProduct(CreateProductDtoRequest request, Principal principal) throws IOException {
+    public ProductDtoResponse createProduct(CreateProductDtoRequest request, Principal principal) throws IOException {
         Product product = new Product();
         product.setQuantity(request.getQuantity());
         product.setTitle(request.getTitle());
@@ -71,6 +75,21 @@ public class ProductService {
 
         product.setPreviewImageId(previewImageId);
         productRepository.save(product);
+
+        String imageUrl = images.stream()
+                .filter(Image::isPreviewImage)
+                .map(Image::getUrl)
+                .findFirst()
+                .orElse("/images/placeholder.png");
+
+        return new ProductDtoResponse(
+                product.getId(),
+                product.getTitle(),
+                product.getQuantity(),
+                product.getPrice(),
+                product.getSellingPrice(),
+                imageUrl
+        );
     }
 
     @Transactional(readOnly = true)
@@ -184,10 +203,10 @@ public class ProductService {
     }
 
     private Image saveImageToFileSystem(MultipartFile file) throws IOException {
-        Files.createDirectories(Paths.get(UPLOAD_DIR)); // Создаем папку, если ее нет
+        Files.createDirectories(Paths.get(uploadDir)); // Создаем папку, если ее нет
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(UPLOAD_DIR + fileName);
+        Path filePath = Paths.get(uploadDir + fileName);
         Files.write(filePath, file.getBytes());
 
         Image image = new Image();
